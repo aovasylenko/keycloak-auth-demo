@@ -3,7 +3,7 @@
 This is demo, how to secure FastAPI python application with Keycloak for browser and non-browser flows:
 
 * `authorization_code` flow for web-application
-* `authroization_code` flow for CLI tool
+* `authorization_code` flow for CLI tool
 * `device_code` flow for CLI tool
 
 This repository contains:
