@@ -740,7 +740,7 @@
       "alwaysDisplayInConsole": false,
       "clientAuthenticatorType": "client-secret",
       "redirectUris": [
-        "http://localhost:*/cli-callback"
+        "http://localhost:*"
       ],
       "webOrigins": [],
       "notBefore": 0,

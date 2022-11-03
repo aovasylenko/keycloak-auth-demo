@@ -56,6 +56,21 @@ Requesting admin endpoint:
 {'detail': 'Access denied - super-admin rights are needed'}
 ```
 
+### authorization flow for cli tool
+
+1. Run `python app/cli_code_flow.py`. The token will be obtained with *authorization_code* flow thought the public `app1-public` client. Also you will see a browser window opened
+
+```
+...
+Logged in as user-id=f7e74602-19b8-41ba-9f6c-f33d9247be17
+
+Requesting default endpoint:
+{'account': {'user': {'user_id': 'f7e74602-19b8-41ba-9f6c-f33d9247be17', 'username': 'user', 'is_superadmin': False}}}
+Requesting admin endpoint:
+{'detail': 'Access denied - super-admin rights are needed'}
+```
+
+
 ### Keycloak user session logout
 
 Navigate to http://localhost:8080/realms/app/account/#/ and click "Sign out" in the right top corner.

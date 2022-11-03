@@ -5,7 +5,6 @@ from pprint import pprint as pp
 import webbrowser
 import time
 
-#import jwt
 import qrcode
 import requests
 
