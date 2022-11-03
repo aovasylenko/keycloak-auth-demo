@@ -1,38 +1,62 @@
-#from authlib.integrations.requests_client import OAuth2Session
-
 from fastapi import Depends, FastAPI, Security, Request
 from fastapi.security import OpenIdConnect
+from fastapi.security.utils import get_authorization_scheme_param
+from jose import jwt, ExpiredSignatureError, JWTError
 from pydantic import BaseModel
 import uvicorn
+from starlette.exceptions import HTTPException
+
+from utils import OIDCToken
+
 
 app = FastAPI()
+oid = OIDCToken(openIdConnectUrl="http://localhost:8080/realms/app/.well-known/openid-configuration", audience="account")
 
-oid = OpenIdConnect(openIdConnectUrl="http://localhost:8080/realms/app/.well-known/openid-configuration")
+#
+# FastAPI user dependencies and User Model
+#
 
 class User(BaseModel):
+    user_id: str
     username: str
+    is_superadmin: bool
 
-
-def get_current_user(oauth_header: str = Security(oid)):
-    user = User(username=oauth_header)
+def current_user(token: dict = Security(oid)):
+    user = User(
+        user_id=token["sub"],
+        username=token["preferred_username"],
+        is_superadmin="super-admin" in token["realm_access"]["roles"]
+    )
     return user
 
+def admin_user(me: User = Depends(current_user)):
+    if not me.is_superadmin:
+        raise HTTPException(status_code=403, detail="Access denied - super-admin rights are needed") 
+    return me
+
+#
+# Service endpoints
+#
 
 @app.get("/")
-async def base(request: Request, current_user: User = Depends(get_current_user)):
-    # token = request.headers['authorization'].replace("Bearer ", "")
+def base(request: Request, me: User = Depends(current_user)):
+    """ Base account endpoints. Valid JWT token is required. """
+    return {
+        "account": {
+            "user": me
+        }
+    }
 
 
-    print(current_user)
-
-    # oauth = OAuth2Session(client_id="Test Client ID", client_secret="some-secret-string")
-    # result = oauth.introspect_token(
-    #     url="https://keycloak.sso.gwdg.de/auth/realms/MeDIC/protocol/openid-connect/token/introspect", token=token)
-    # content = json.loads(result.content.decode())
-    # if not content['active']:
-    #     raise HTTPException(status_code=401, detail="Token expired or invalid")
-    # else:
-    #     return content
+@app.get("/admin")
+def base(request: Request, me: User = Depends(admin_user)):
+    """ Admin endpoints. Only users with `super-admin` role can access. """
+    return {
+        "admin": True,
+        "account": {
+            "user": me
+        }
+    }
 
 
 if __name__ == "__main__":

@@ -64,9 +64,20 @@ def main():
             continue
 
         if resp.status_code == 200:
-            print(f"\nRECEIVED TOKEN:\n{resp.json()['access_token']}")
-            token = json.loads(base64.b64decode(resp.json()['access_token'].split(".")[1]))
+            access_token = resp.json()['access_token']
+            print(f"\nRECEIVED TOKEN:\n{access_token}")
+            body = access_token.split(".")[1]
+            body += "=" * ((4 - len(body) % 4) % 4)
+            token = json.loads(base64.b64decode(body))
             print(f"\nLogged in as user-id={token['sub']}\n")
+
+            print("Requesting default endpoint:")
+            resp = requests.get("http://localhost:5000/", headers={"Authorization": f"Bearer {access_token}"})
+            print(resp.json())
+
+            print("Requesting admin endpoint:")
+            resp = requests.get("http://localhost:5000/admin", headers={"Authorization": f"Bearer {access_token}"})
+            print(resp.json())
         else:
             print(f"\nERROR: {resp.status_code}")
             pp(resp.json())
