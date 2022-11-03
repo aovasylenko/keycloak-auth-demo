@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:20.0.0
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: [ "CMD", "curl", "--fail", "http://localhost:8080/auth/health" ]
+      interval: 1s
+      timeout: 2s
+      retries: 20
+    command: ["start-dev", "--import-realm"]
+    networks:
+      - demo
+    volumes:
+      - keycloak-data:/opt/keycloak/data/
+      - ./keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json      
+
+volumes:
+  keycloak-data:
+
+networks:
+  demo:
