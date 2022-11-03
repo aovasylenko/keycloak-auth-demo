@@ -634,9 +634,12 @@
       "clientAuthenticatorType": "client-secret",
       "secret": "CLIENTSECRET",
       "redirectUris": [
-        "http://localhost:5000/callback"
+        "http://localhost:5000/callback",
+        "http://localhost:5000/docs/oauth2-redirect"
       ],
-      "webOrigins": [],
+      "webOrigins": [
+        "http://localhost:5000"
+      ],
       "notBefore": 0,
       "bearerOnly": false,
       "consentRequired": false,

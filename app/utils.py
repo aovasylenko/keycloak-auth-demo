@@ -11,12 +11,19 @@ class OIDCToken(OpenIdConnect):
         super().__init__(openIdConnectUrl=openIdConnectUrl, **kwargs)
         resp = requests.get(openIdConnectUrl)
         resp.raise_for_status()
-        jwks_uri = resp.json()["jwks_uri"]
+        self._wellknown = resp.json()
+        jwks_uri = self._wellknown["jwks_uri"]
 
         resp = requests.get(jwks_uri)
         resp.raise_for_status()
         self._certs = resp.json()
         self._audience = audience
+
+
+    @property
+    def wellknown(self) -> dict:
+        return self._wellknown
+
 
     async def __call__(self, request: Request) -> dict:
         scheme, token = get_authorization_scheme_param(await super().__call__(request))
