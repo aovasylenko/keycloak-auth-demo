@@ -41,7 +41,7 @@ Alternatively you can use swagger to navigate to resources - use http://localhos
 ### device_code flow
 
 1. Open another terminal, active conda environment with `conda activate ./.env`
-2. Run `python app/device_flow_demo.py`. The token will be obtained with *device_code* flow and you will be able to see results of calling service API endpoints:
+2. Run `python app/cli_device_flow.py`. The token will be obtained with *device_code* flow and you will be able to see results of calling service API endpoints:
 
 ```
 ...
