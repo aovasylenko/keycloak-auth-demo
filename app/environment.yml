@@ -6,3 +6,4 @@ dependencies:
   - conda-forge::qrcode
   - conda-forge::fastapi
   - conda-forge::uvicorn
+  - python-jose
