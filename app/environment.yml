@@ -1,0 +1,8 @@
+channels:
+  - defaults
+dependencies:
+  - requests
+  - python=3.10
+  - conda-forge::qrcode
+  - conda-forge::fastapi
+  - conda-forge::uvicorn
